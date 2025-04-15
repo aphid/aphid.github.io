@@ -5,7 +5,9 @@ var points = [];
 function setup() {
   //creates a canvas, the numbers are pixels.  
   //remember, 72 pixels per inch on screen
-  createCanvas(1000, 1000);
+  let canvas = createCanvas(1000, 1000);
+  canvas.parent('#sketch-holder');
+
   //background color, R G B
   background(253, 245, 230);
   //stroke color (the color of lines and outlines) in grayscale
@@ -17,8 +19,8 @@ function setup() {
   function randomPoint() {
     //creates random numbers between the specified range
     //floor rounds them down
-    var x = floor(random(1, 1000));
-    var y = floor(random(1, 1000));
+    var x = floor(random(500, 1000));
+    var y = floor(random(1, 500));
     //returns an object with properties called x and y set to above
     return {
       "x": x,
