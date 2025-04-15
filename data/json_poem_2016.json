@@ -1,0 +1,63 @@
+[
+   {
+      "?": {
+         "Asian?": [
+            "Chinese?",
+            "Korean?",
+            "Vietnamese?",
+            "Filipino?",
+            {
+               "Japanese?": "yes"
+            }
+        ],
+         "do you": {
+            "speak?": false,
+            "watch anime?": false,
+            "listen to J-pop?": false,
+            "read manga?": false,
+            "visit?": 3
+         }
+      },
+      "Yes, my parents": {
+         "attended college": "in the US",
+         "speak English": "better than Japanese",
+         "were born in": "California"
+      },
+      "Others": {
+         "speak in": [
+            {"code": "zh", "nativeName": "中文 (Zhōngwén), 汉语, 漢語"},
+            {"code": "vi", "nativeName": "Tiếng Việt"},
+            {"code": "ko", "nativeName": "한국어 (韓國語), 조선말 (朝鮮語)"}
+        ],
+         "to": "each other",
+         "and I": "can't",
+         "are first generation": "or ABC",
+         "and I am": ["sansei?", "go-sei?"]
+      },
+      "I": {
+         "celebrate": {
+            "New Years": "on January 1st",
+            "but also recognize": "Chinese New Year"
+         },
+         "fit": {
+            "The Stereotype": ["grades", "career", "goals"]
+         },
+         "but don't fit": "the culture"
+      },
+      "So, I": {
+         "search": {
+            "search": {
+               "search": {
+                  "for": "me"
+               }
+            }
+         }
+      }
+   },
+
+   {
+      "Documentation": "This poem was inspired by a conversation with a friend who was asking about my experience as an Asian person compared to other Asians. It's also an introspective piece on my own search for identity and the stereotypes that I've encountered. I've previously worked with JSON and it's as finicky as I remember. I actually had to ask my mom what generation I am -- and I still don't know which I identify as. In Japanese American culture, Issei are Japanese born who moved to America, and Nisei are the 2nd generation. I am either Sansei (3rd generation) or Go-sei (5th generation).",
+      "Language codes": "inspired by: https: //stackoverflow.com/questions/3217492/list-of-language-codes-in-yaml-or-json",
+      "Other Documentation": "I also helped Will with his poem that counts the number of times a word appears in a song. It's a python program that reads in input, uses a dictionary to store the words and counts, and prints out the words by most seen."
+   }
+]

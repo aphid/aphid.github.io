@@ -1,0 +1,68 @@
+{
+  "Invisible Man": {
+    "Me?": {
+      "features": [
+        "name",
+        "age",
+        "height",
+        "weight",
+        "gender",
+        "race",
+        "nationality",
+        "head hair features",
+        "other hair features",
+        "skin colour",
+        "facial features",
+        "home language",
+        "employment",
+        "residence",
+        "eating/drinking habits",
+        "pencil test results"
+      ],
+      "visible feaures": "none"
+    },
+    "I": {
+      "am invisible": {
+        "because": "people refuse to see me",
+        "like": "bodiless heads you see sometimes in circus sideshows",
+        "as though": "I have been surrounded by mirrors of hard, distorting glass."
+      },
+      "am imaginary": {
+        "because": "they see only my surroundings, themselves or figments of their imagination",
+        "like": "a mask or a shadow"
+      },
+      "am": [
+        "everything",
+        "anything",
+        "except me"
+      ]
+    },
+    "But": {
+      "my problem": "going everyone's way but my own",
+      "Where and Who?": {
+        "am": {
+          "I": {
+            "really?": ""
+          }
+        }
+      },
+      "I am": [
+        "real but perhaps not visible",
+        "a result of a long and discontinuous series of transformations.",
+        "signifier and signified",
+        "invisible"
+      ],
+      "I am not": [
+        "the information they collected",
+        "what they see",
+        "fixed"
+      ],
+      "because": "Black  is . . .  an’ black ain’t."
+    }
+  },
+  "Sources": [
+    "Invisble Man by Ralph Ellison",
+    "Population Registration Act, 1950",
+    "Dark Matters On the Surveillance of Blackness by Simone Browne"
+  ]
+}
