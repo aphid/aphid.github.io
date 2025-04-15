@@ -7,11 +7,25 @@
 </head>
 <body>
     
+
+    <ul>
+        <li><a href="json_poem_2016.json">A poem </a>by Emily Kobayashi</li>
+        <li><a href="json_poem_2019.json">A poem</a> by Davis O'Shea</li>
+        <li><a href="face++.json">Face data</a> from a popular API</li>
+        <li><a href="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson">Recent earthquake data</a> from the USGS</li>
+        <li><a href="https://www.reddit.com/r/birdswitharms/.json">Recent activity </a>on the Birds with Arms subreddit</li>
+        <li><a href="http://%20http://archive.org/details/tv?q=%22gone%20are%20the%20days%22&output=json">Output from a query</a> requesting news clips containing the phrase "gone are the days".</li>
+        <li><a href="https://oversightmachin.es/baltimore/data.json">Premiere metadata</a> from a collection of FBI aerial surveillance videos</li>
+        <li><a href="https://www.youtube.com/watch?v=SySZdvsFYt4">Ode to Spot</a></li>
+    </ul>
+
     <script>
 
-        
 
 
+        for (let link of document.querySelectorAll("a")){
+            link.target = "_blank";
+        }
 
 
 
