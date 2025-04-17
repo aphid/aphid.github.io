@@ -83,21 +83,29 @@
         let facedata = "face++.json";
         let p2016 = "./json_poem_2016.json";
         let p2019 = "./json_poem_2019.json";
+        let eq = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson"
 
-        let pp2016, pp2019, face, balt;
+        let pp2016, pp2019, face, balt, eq;
 
         let run = async function () {
             pp2016 = await loadData(p2016);
             pp2019 = await loadData(p2019);
             face = await loadData(facedata);
             balt = await loadData(baltimore);
+            eqdata = await loadData(eq);
+            /*
             renderBaltimore(balt);
             render2016(pp2016);
             render2019(pp2019);
             renderFace(facedata);
+            renderEarthquake(eqdata);*/
 
         };
 
+        let renderEarthquake = function(data){
+
+            
+        }
 
         let renderBaltimore = function(data){
             let target = document.querySelector("#baltimore");
