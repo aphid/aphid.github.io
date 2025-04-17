@@ -84,12 +84,13 @@
         let p2016 = "./json_poem_2016.json";
         let p2019 = "./json_poem_2019.json";
 
+        let pp2016, pp2019, face, balt;
 
         let run = async function () {
-            let pp2016 = await loadData(p2016);
-            let pp2019 = await loadData(p2019);
-            let face = await loadData(facedata);
-            let balt = await loadData(baltimore);
+            pp2016 = await loadData(p2016);
+            pp2019 = await loadData(p2019);
+            face = await loadData(facedata);
+            balt = await loadData(baltimore);
             renderBaltimore(balt);
             render2016(pp2016);
             render2019(pp2019);
@@ -105,7 +106,9 @@
             target.append(header);
             let pre = document.createElement("pre");
             target.appendChild(pre);
-            pre.textContent = JSON.stringify(data);
+            
+
+
         }
 
         let render2016 = function(data){
