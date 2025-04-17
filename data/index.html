@@ -98,7 +98,12 @@
 
         let renderBaltimore = function(data){
             let target = document.querySelector("#baltimore");
-            target.textContent = data;
+            let header = document.createElement("h4");
+            header.textContent = "Baltimore Data";
+            target.append(header);
+            let pre = document.createElement("pre");
+            target.appendChild(pre);
+            pre.textContent = data;
         }
 
 
