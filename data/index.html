@@ -1,43 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Data Document</title>
+    <style>
+        .datapoem {
+            font-family: monospace;
+            max-width: 80vw;
+            border: 1px solid darkblue;
+        }
+    </style>
 </head>
+
 <body>
-    
+
 
     <ul>
         <li><a href="json_poem_2016.json">A poem </a>by Emily Kobayashi</li>
         <li><a href="json_poem_2019.json">A poem</a> by Davis O'Shea</li>
         <li><a href="face++.json">Face data</a> from a popular API</li>
-        <li><a href="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson">Recent earthquake data</a> from the USGS</li>
-        <li><a href="https://www.reddit.com/r/birdswitharms/.json">Recent activity </a>on the Birds with Arms subreddit</li>
-        <li><a href="http://archive.org/details/tv?q=%22gone%20are%20the%20days%22&output=json">Output from a query</a> requesting news clips containing the phrase "gone are the days".</li>
-        <li><a href="https://oversightmachin.es/baltimore/data.json">Premiere metadata</a> from a collection of FBI aerial surveillance videos</li>
+        <li><a href="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson">Recent
+                earthquake data</a> from the USGS</li>
+        <li><a href="https://www.reddit.com/r/birdswitharms/.json">Recent activity </a>on the Birds with Arms subreddit
+        </li>
+        <li><a href="http://archive.org/details/tv?q=%22gone%20are%20the%20days%22&output=json">Output from a query</a>
+            requesting news clips containing the phrase "gone are the days".</li>
+        <li><a href="https://oversightmachin.es/baltimore/data.json">Premiere metadata</a> from a collection of FBI
+            aerial surveillance videos</li>
         <li><a href="https://www.youtube.com/watch?v=SySZdvsFYt4">Ode to Spot</a></li>
     </ul>
 
+
+    <div class="datapoem" id="face"></div>
+    <div class="datapoem" id="p2016"></div>
+    <div class="datapoem" id="p2019"></div>
+    <div class="datapoem" id="baltimore"></div>
+
     <script>
 
+        let string = "hi there this is some text";
+        let string2 = `this is an even longer string that contains ${string} as well`;
+        let h = "happy";
+        let b = "birthday";
+        let hb = h + b; //happybirthday;
+
+        let num = 1066;
+        let num2 = 3.5;
+        let sum = num + num2; //1069.5
+
+        console.log("1066" + 3.5); //10663.5
+
+        let arr = [num, string, hb];
+        arr[0];
+
+        let students = [
+            {
+                "name": "Ernie",
+                "present": true
+            },
+            {
+                "name": "Brandon",
+                "present": true
+            }
+        ]
 
 
-        for (let link of document.querySelectorAll("a")){
+
+
+
+
+        for (let link of document.querySelectorAll("a")) {
             link.target = "_blank";
         }
 
 
 
         let baltimore = "https://oversightmachin.es/baltimore/data.json";
+        let facedata = "face++.json";
+        let p2016 = "./json_poem_2016.json";
+        let p2019 = "./json_poem_2019.json";
 
-        let run = async function(){
-            let json = await loadData("json_poem_2019.json");
-            console.log(json);
+
+        let run = async function () {
+            let pp2016 = await loadData(p2016);
+            let pp2019 = await loadData(p2019);
+            let face = await loadData(facedata);
+            let balt = await loadData(baltimore);
+            renderBaltimore(balt);
+            render2016(pp2016);
+            render2019(pp2019);
+            renderFace(facedata);
+
         };
 
-        
-        let loadData = async function(url){
+
+        let renderBaltimore = function(data){
+            let target = document.querySelector("#baltimore");
+            target.textContent = data;
+        }
+
+
+        let loadData = async function (url) {
             let data = await fetch(url);
             return await data.json();
         }
@@ -46,4 +111,5 @@
         run();
     </script>
 </body>
+
 </html>
