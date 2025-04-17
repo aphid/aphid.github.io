@@ -104,8 +104,11 @@
             let header = document.createElement("h4");
             header.textContent = "Baltimore Data";
             target.append(header);
-            let pre = document.createElement("pre");
-            target.appendChild(pre);
+            for (let b of data){
+                let v = document.createElement("video");
+                v.src = b.webm;
+                target.appendChild(v);
+            }
             
 
 
