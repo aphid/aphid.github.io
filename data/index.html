@@ -106,7 +106,7 @@
             target.append(header);
             for (let b of data){
                 let v = document.createElement("video");
-                v.src.replace("/var/www/oversightmachin.es/html/", "https://oversightmachin.es/baltimore/") = b.webm;
+                v.src = b.webm.replace("/var/www/oversightmachin.es/html/", "https://oversightmachin.es/baltimore/");
                 target.appendChild(v);
             }
             
