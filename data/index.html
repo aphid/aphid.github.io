@@ -12,7 +12,9 @@
             border: 1px solid darkblue;
         }
 
-        .datapoem pre { max-width: 80vw;}
+        .datapoem pre {
+            max-width: 80vw;
+        }
     </style>
 </head>
 
@@ -84,54 +86,70 @@
         let p2016 = "./json_poem_2016.json";
         let p2019 = "./json_poem_2019.json";
         let eq = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson"
+        let oom = "./ORDER OF MAGNITUDE [333795857].json";
 
-        let pp2016, pp2019, face, balt, eq;
+        let pp2016, pp2019, face, balt, eqd, oomwords;
 
         let run = async function () {
             pp2016 = await loadData(p2016);
             pp2019 = await loadData(p2019);
             face = await loadData(facedata);
             balt = await loadData(baltimore);
-            eqdata = await loadData(eq);
+            eqd = await loadData(eq);
+            oomwords = await loadData(oom);
             /*
             renderBaltimore(balt);
             render2016(pp2016);
             render2019(pp2019);
             renderFace(facedata);
-            renderEarthquake(eqdata);*/
+            renderEarthquake(eqd);
+            renderOoM(oomwords)*/
 
         };
 
-        let renderEarthquake = function(data){
+        let renderOoM = function(data){
 
-            
+        } 
+
+        let renderEarthquake = function (data) {
+
+
         }
 
-        let renderBaltimore = function(data){
+        let renderBaltimore = function (data) {
             let target = document.querySelector("#baltimore");
             let header = document.createElement("h4");
             header.textContent = "Baltimore Data";
             target.append(header);
-            for (let b of data){
+            for (let b of balt) {
                 let v = document.createElement("video");
                 //v.src = b.webm.replace("/var/www/oversightmachin.es/html/", "https://oversightmachin.es/");
                 target.appendChild(v);
             }
-            
+
+
+
+        }
+
+        let render2016 = function (data) {
+            for (let item of pp2016[0]["?"]["Asian?"]) {
+                if (typeof item == "string") {
+                    console.log(item)
+                } else {
+                    console.log("Japanese?", item["Japanese?"])
+                }
+            }
+
 
 
         }
 
-        let render2016 = function(data){
+        let render2019 = function (data) {
 
         }
 
-        let render2019 = function(data){
-            
-        }
+        let renderFace = function (data) {
 
-        let renderFace = function(data){
-            
         }
 
 
