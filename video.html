@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timed media PART 1</title>
+    <style>
+        video {
+            display: none;
+            width: 80vw;
+        }
+
+        img {
+            display: none;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>timed media part 1</h1>
+    <p id="rate"></p>
+    <video src="https://archive.org/download/04-vapormario-v-5-031021/04_vapormario_v5_031021.mp4" controls></video>
+
+    <script>
+
+
+        let video = document.querySelector("video");
+
+
+
+        let go = async function () {
+            loadImages();
+
+            await waitForVideo(video);
+            video.style.display = "block";
+        }
+
+        let loadImages = async function(){
+            let urlS = "https://oversightmachin.es/findings/slash/100720_0245_attach2_"; //[...] 
+            let urlE = "_tesseract_2.1.1.png";
+            for (let i = 0; i < 15; i++){
+                let img = document.createElement("img");
+                img.src = urlS + i.toString().padStart(3, "0") + urlE;
+                document.querySelector("body").appendChild(img);
+                await waitForImage(img);
+                img.style.display = "inline";
+            }
+
+        }
+
+        let waitForVideo = async function (vid) {
+            return new Promise(function (resolve, reject) {
+                vid.addEventListener("canplay", function () {
+                    resolve();
+                }, { once: true });
+            })
+        }
+
+        let waitForImage = async function (img) {
+            return new Promise(function (resolve, reject) {
+                img.addEventListener("load", function () {
+                    resolve();
+                }, { once: true });
+            })
+        }
+
+        video.addEventListener("timeupdate", function(){
+            if (this.currentTime > 10){
+                this.playbackRate = this.playbackRate + .05;
+            }
+            if (this.playbackRate > 6){
+                this.playbackRate = 0.5;
+            }
+            document.querySelector("#rate").textContent = this.playbackRate;
+        })
+
+        go();
+
+
+
+    </script>
+
+
+</body>
+
+</html>
