@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>time</title>
+    <script>
+        //note this script tag is in the head, above the body
+
+        //console.log(document.querySelector("#someStuff").textContent); //is null
+
+
+        let div, intervalID;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            div = document.querySelector("#someStuff");
+            console.log(div.textContent);
+
+            doTheThing();
+        });
+
+        window.setTimeout(function () {
+            console.log(div);
+            if (div) {
+                div.textContent = "HELLO";
+            }
+        }, 2500);
+
+        async function doTheThing() {
+            div.textContent = "waiting 5 sec";
+            await sleep(5000);
+
+            div.textContent = "and another 7 sec";
+            await sleep(7000);
+            startLaughing();
+            for (let i = 1; i < 8; i++) {
+                let dur = i * 1000;
+                div.textContent = "waiting another " + dur + " miliseconds";
+                await sleep(dur);
+
+            }
+            div.textContent = "done looping";
+            await sleep(1000);
+            stopLaughing();
+        }
+
+
+        window.setTimeout(() => {
+            console.log("Delayed for 1 second.");
+        }, 1000);
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function startLaughing() {
+            intervalID = window.setInterval(() => {
+                div.textContent = "HA " + div.textContent;
+            }, 500);
+        }
+
+        function stopLaughing() {
+            console.log("stahp");
+            div.textContent = "and scene"
+            window.clearInterval(intervalID);
+
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+    <div id="someStuff">hi i'm a div</div>
+</body>
+
+
+</html>

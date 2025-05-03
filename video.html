@@ -27,11 +27,11 @@
 
 
         let video = document.querySelector("video");
-
+        let counter = 0;
 
 
         let go = async function () {
-            loadImages();
+            await loadImages();
 
             await waitForVideo(video);
             video.style.display = "block";
@@ -51,6 +51,7 @@
         }
 
         let waitForVideo = async function (vid) {
+            counter++;
             return new Promise(function (resolve, reject) {
                 vid.addEventListener("canplay", function () {
                     resolve();
