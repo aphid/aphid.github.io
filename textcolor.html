@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>overlay</title>
+    <style>
+
+        body {
+            background-color: #012f01;
+            margin: 0;
+            padding: 0;
+            color: paleturquoise;
+        }
+
+        .emphasized {
+            font-weight: bold;
+            color: orange;
+        }
+
+    </style>
+</head>
+
+<body>
+        <video controls src="https://oversightmachin.es/overSSCIght/media/video/100202_0230.mp4">
+            <track src="100202_0230.vtt" srclang="en">
+        </video>
+      
+        <p>Winter Solstice 2019</p>
+        
+        <p>The fact is: the Light will increase</p> 
+        <p>It always does. Whether we think it should</p>
+        <p>or not. No matter how determined</p>
+        <p>we are to be gloomy.</p>
+        <br/>
+        <p>We may be sure that things</p>
+        <p>are worse than ever.</p>
+        <p>We may even be right</p>
+        <p>BUT</p>
+        <br/>
+        <p>HERE COMES THE SUN</p>
+        <p id="words">Try &amp; stop it.</p>
+
+        <p>Diane di Prima</p> 
+
+    <script>
+      let video = document.querySelector("video");
+      let words = document.querySelector("#words");
+        console.log(words);
+      let emph = function(ele){
+        ele.classList.add("emphasized");
+      }
+      let deEmph = function(ele){
+        ele.classList.remove("emphasized");
+      }
+
+      video.addEventListener("timeupdate", function(){
+        console.log(words);
+        if (this.currentTime > 5 && this.currentTime < 12){
+            emph(words);
+        }
+        else {
+            deEmph(words);
+        }
+
+      });
+
+
+
+
+    </script>
+</body>
+
+
+
+</html>
