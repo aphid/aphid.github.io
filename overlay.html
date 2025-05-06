@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>overlay</title>
+    <style>
+
+        /* shouldn't actually see border b/c of container's sizing */
+        body {
+            background-color: darkorchid;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* a container that goes around the video */
+        #videoContainer {
+            box-sizing: border-box;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid greenyellow;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* an annotation */
+        #anno {
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 192, 203, 0);
+            color: blue;
+            width: 300px;
+            border-radius: 45%;
+            text-align: center;
+            transition: all 5s ease-in-out;
+            border: 8px solid turquoise;
+        }
+
+        /* backdrop-filter affects all elements underneath the element */
+        #blur {
+            z-index: 150;
+            position: absolute;
+            left: 20%;
+            top: 20%;
+            width: 570px;
+            height: 370px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: all 2s linear;
+
+        }
+
+        .linus {
+            transition: all 5s linear;
+            position: absolute;
+            left: -40%;
+            top: 15%;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="videoContainer">
+        <video src="https://oversightmachin.es/overSSCIght/media/video/100202_0230.mp4">
+            <track src="100202_0230.vtt" srclang="en">
+        </video>
+        <div id="blur"></div>
+
+        <div id="anno">✨✨✨✨✨✨</div>
+    </div>
+
+    <script>
+        //our DOM objects!
+        let video = document.querySelector("video");
+        let container = document.querySelector("#videoContainer");
+        let annotate = document.querySelector("#anno");
+        let blur = document.querySelector("#blur");
+
+        //when the video is ready, show the controls and move the annotation into view 1.5s later.
+        video.addEventListener("loadedmetadata", async function () {
+            console.log("video ready");
+            await sleep(5000);
+            this.currentTime = 18 * 60 + 8;
+            await sleep(1500);
+            this.controls = true;
+            annotate.style.top = "50%";
+        })
+
+        let count = 0;
+        //listener that runs after #anno is done moving.
+        //see docs https://developer.mozilla.org/en-US/docs/Web/API/TransitionEvent
+        annotate.addEventListener("transitionend", function () {
+            console.log("done!");
+            //change the contents and the background. yay, transitions!
+            annotate.textContent = "💩💩💩💩💩💩";
+            annotate.style.backgroundColor = "yellow";
+            //stay centered (keeping the -50,-50)! but now rotate 5 times;
+            annotate.style.transform = "translate(-50%, -50%) rotate(5turn)";
+            //this should only be true for the end of the spin
+            if (count >= 1) {
+                blur.style.opacity = 1;
+            }
+            count++;
+
+        });
+
+
+        let createLinus = async function(){
+            let img = document.createElement("img");
+            img.classList.add("linus");
+            img.src = "linus.gif";
+            container.appendChild(img);
+            console.log(img);
+            await sleep(25);
+            img.style.left = "120%";
+            img.addEventListener("transitionend", function(){
+                console.log("bye linus!");
+                img.remove();
+            })
+        }
+
+        video.addEventListener("play", createLinus);
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+
+
+
+</html>
