@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        video {
+            width: 80vw;
+        }
+
+        .emph {
+            font-weight: bold;
+            color: darkorchid;
+        }
+
+        .transcript {
+            max-height: 300px;
+            font-size: 14pt;
+            overflow-y: scroll;
+            max-width: 700px;
+            box-shadow: 10px 10px 5px 10px rgba(0, 0, 0, 0.75);
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>trax</title>
+</head>
+
+<body>
+    <video src="8mbShrek.webm" controls>
+        <track src="Shrek.vtt" type="captions" default srclang="en">
+    </video>
+    <h3><input id="plzscroll" type="checkbox" checked> scroll to active </h3>
+
+    <script src="transcript.js"></script>
+
+    <script>
+        let plzscroll = document.querySelector("#plzscroll")
+        let track = document.querySelector("video").textTracks[0];
+        let transcript = document.querySelector(".transcript");
+        //see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack/cuechange_event
+        track.addEventListener("cuechange", () => {
+            console.log("cuechange");
+            //only one cue should be active at a time...
+            let cue = track.activeCues[0];
+            //but let's make sure it exists 
+            if (cue) {
+                //match data-start with starttime. don't need to match text exactly (the cues have some html in them). probably overkill to loop over every div, but oh well.
+                for (let div of document.querySelectorAll(".transcript div")) {
+                    if (div.dataset.start == cue.startTime) {
+                        console.log("found it")
+                        if (plzscroll.checked){
+                            div.scrollIntoView();
+                        }
+                        div.classList.add("emph");
+                    } else {
+                        div.classList.remove("emph");
+                    }
+                }
+            }
+        });
+
+
+
+    </script>
+</body>
+
+</html>
