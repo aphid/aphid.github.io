@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loopsloopsloopsloopsloops</title>
+    <style>
+        body {
+            background-image: url("https://margek.com/uploads/8/6/9/3/8693675/15002251-10105932595971923-3279279049138879900-o_orig.jpg");
+        }
+
+        html, body {
+            min-height: 100vh;
+            margin: 0;
+
+        }
+
+        button {
+            display: block;
+            font-size: 6em;
+            background-color: rgba(255, 239, 213, 0.479);
+        }
+
+        video, audio {
+            width: 600px;
+            border: 1px dotted purple;
+        }
+
+        video {
+            min-height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <audio src="therefore.mp3" controls loop>
+        <track src="therefore.vtt" srclang="en" default>
+    </audio>
+    <audio src="therefore.mp3" controls loop>
+        <track src="therefore.vtt" srclang="en" default>
+    </audio>
+    <video src="therefore.mp3" controls loop>
+        <track src="therefore.vtt" srclang="en" default>
+    </video>
+    <video src="therefore.mp3" controls loop>
+        <track src="therefore.vtt" srclang="en" default>
+    </video>
+    <button>play all!</button>
+</body>
+
+<script>
+    let audios = document.querySelectorAll("video, audio");
+ 
+    document.querySelector("button").addEventListener("click", function () {
+        for (let audio of audios) {
+            audio.currentTime = 0;
+            let max = 0.009;
+            let min = -0.009;
+            let rnd = getRandomArbitrary(min,max);
+            console.log(rnd);
+            audio.playbackRate = 1 + rnd;
+            audio.play();
+        }
+    })
+
+
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+  
+
+</script>
+
+</html>
