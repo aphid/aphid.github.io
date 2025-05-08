@@ -62,7 +62,7 @@
             console.log(rnd);
             audio.playbackRate = 1 + rnd;
             audio.play();
-            this.controls = false;
+            audio.removeAttribute("controls");
         }
     })
 
