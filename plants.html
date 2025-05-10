@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>time.code</title>
+    <script src="pericarp.js"></script>
+    <style>
+        body {
+            background-color: darkorchid;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* a container that goes around the video */
+        #videoContainer {
+            box-sizing: border-box;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid greenyellow;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #star {
+            z-index: 100;
+            position: fixed;
+            left: 100px;
+            top: 100px;
+            width: 120px;
+            opacity: 0;
+            mix-blend-mode: lighten;
+            transition: opacity 1s linear;
+        }
+
+        #text {
+            font-family: sans-serif;
+            padding: 3px;
+            opacity: 0;
+            transition: opacity 1s linear;
+            z-index: 100;
+            position: absolute;
+            right: 100px;
+            top: 100px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="videoContainer">
+        <video
+            src="https://archive.org/download/200634_The_Growth_of_Plants/200634_The_Growth_of_Plants_master.intros.mp4"
+            controls>
+        </video>
+        <img src="star.png" id="star">
+        <div id="text"></div>
+>    </section>
+</body>
+
+<script>
+
+    let video = document.querySelector("video");
+    let text = document.querySelector("#text");
+
+
+    let go = async function () {
+        await waitForVideo(video);
+        video.style.display = "block";
+    }
+
+
+
+    let waitForVideo = async function (vid) {
+        return new Promise(function (resolve, reject) {
+            vid.addEventListener("canplay", function () {
+                resolve();
+            }, { once: true });
+        })
+    }
+
+
+    go();
+
+
+    //pericarp.at(video, 5, 10, testStart, testEnd);
+
+    /* PERICARP TAKES FOUR OR FIVE VALUES
+    1: the element it's operating on;
+    2: start time as seconds, hh:mm:ss or mm:ss (ss can have decimals after)
+    3: end time as seconds, hh:mm:ss or mm:ss (ss can have decimals after)
+    4: function to run at start
+    5 (optional): function to rund at end */
+
+    //change opacity between 12 & 22 seconds
+    pericarp.cue(video, "00:12", "00:22",
+        function () {
+            console.log("started");
+            video.style.opacity = 0.3;
+        },
+        function () {
+            console.log("ended");
+            video.style.opacity = 1;
+        })
+
+    pericarp.cue(video, 3, 3.5,
+        function () {
+            video.currentTime = pericarp.toSec("00:00:24");
+        });
+
+    pericarp.cue(video, 30, 31,
+        function () {
+            video.currentTime = pericarp.toSec("00:04:58");
+
+        });
+
+    pericarp.cue(video, "00:05:00", "00:05:02",
+        function () {
+            video.pause();
+            text.textContent = "The video is going to loop, slowing down each time, until it reaches 1/4 speed. Then the video will continue at its regular rate. Press play to proceed.";
+            text.style.opacity = 1;
+        }, function(){
+            text.style.opacity = 0;
+        }
+    );
+
+    //let's set up a loop that progressively slows down.  from 3 seconds jump to 5:05
+
+    //between 5:11 go back to 5:05 and lower the speed
+    pericarp.cue(video, "00:05:11", "00:05:13",
+        function () {
+            if (video.playbackRate > 0.25) {
+                video.playbackRate = video.playbackRate - 0.1;
+                video.currentTime = pericarp.toSec("05:05");
+            } else {
+                video.playbackRate = 1;
+            }
+
+        });
+
+
+    //you can pass functions (without parentheses) instead of invoking function(){}!
+    pericarp.cue(video, 25, 35, showStar, hideStar)
+
+    function showStar() {
+        console.log("star!")
+        document.querySelector(".star");
+        star.style.opacity = 1;
+    }
+
+    function hideStar() {
+        console.log("no star!");
+        document.querySelector(".star");
+        star.style.opacity = 0;
+    }
+
+</script>
+
+
+</html>

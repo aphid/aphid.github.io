@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>motion study</title>
+    <script src="pericarp.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+
+        }
+
+        /* a container that goes around the video */
+        #videoContainer {
+            box-sizing: border-box;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid greenyellow;
+            overflow: hidden;
+        }
+
+        video {
+            width: 300px;
+        }
+
+        audio {
+            display: block;
+            width: 600px;
+        }
+
+        cite {
+            display: block;
+        }
+
+        details {
+            cursor: pointer;
+        }
+
+        details ul {
+            cursor: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <video id="fast"
+        src="https://ia803203.us.archive.org/9/items/a-galloping-horse-and-rider/A%20galloping%20horse%20and%20rider.mp4"
+        loop></video>
+    <video id="slow"
+        src="https://ia803203.us.archive.org/9/items/a-galloping-horse-and-rider/A%20galloping%20horse%20and%20rider.mp4"></video>
+    <audio src="https://aphid.org/radio_chat_room_loops.opus" controls loop></audio>
+    </section>
+
+    <section>
+        <details><summary>Citations</summary>
+
+<ul>            
+    <li><cite>Eadweard Muybridge, "Annie G. Galloping"</cite></li>
+    <ul><li><aside><a href="https://fdiv.net/2015/01/02/who-were-jockeys-muybridges-photographs">some research</a> about the
+        jockey depicted</aside></li></ul>
+    <li><cite>Young Marble Giants, "Zebra Trucks" (1980)</cite></li>
+    </ul>
+</details>
+    </section>
+</body>
+
+<script>
+    let audio = document.querySelector("audio");
+    let fast = document.querySelector("#fast");
+    let slow = document.querySelector("#slow");
+    console.log(audio);
+    pericarp.cue("audio", 8.3, "01:29.69", function () {
+        console.log("go!");
+        fast.play();
+    }, function () {
+        fast.pause();
+        fast.playbackRate = 1;
+    });
+
+    fast.addEventListener("seeked", function () {
+        console.log("yes")
+        let target = slow.currentTime + .066;
+        if (target > slow.duration) {
+            target = 0;
+        }
+        fast.playbackRate += 0.06;
+        slow.currentTime = target;
+    })
+
+
+</script>
+
+
+</html>
