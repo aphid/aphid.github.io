@@ -8,6 +8,26 @@ pericarp.toHMS = function (sec) {
     return new Date(sec * 1000).toISOString().slice(11, 19);
 }
 
+pericarp.waitFor = function (element, event, timeout) {
+    if (!timeout) {
+        //default is 15 seconds, plenty for a network connection
+        timeout = 15000;
+    }
+    console.log(timeout);
+
+    return new Promise(function (resolve, reject) {
+        window.setTimeout(function () {
+            console.log("timeout");
+            reject("timeout reached");
+        }, timeout);
+        element.addEventListener(event, () => {
+            //if we reach timeout, reject, otherwise resolve.
+
+            resolve(true);
+        });
+    });
+};
+
 //"00:00:15" --> 15 || "00:15" --> 15
 pericarp.toSec = function (hms) {
     if (typeof hms === "number") {
@@ -19,10 +39,10 @@ pericarp.toSec = function (hms) {
     //if hhmmss
     if (s.length == 3) {
         seconds = (+s[0]) * 60 * 60 + (+s[1]) * 60 + (+s[2]);
-    //or mmss
+        //or mmss
     } else if (s.length == 2) {
-        seconds = parseInt(+s[0],10) * 60 + parseFloat(+s[1]) 
-    //or ...something else? no thanks
+        seconds = parseInt(+s[0], 10) * 60 + parseFloat(+s[1])
+        //or ...something else? no thanks
     } else {
         throw ("h:m:s please")
     }
@@ -31,16 +51,16 @@ pericarp.toSec = function (hms) {
 
 pericarp.cue = function (element, start, end, startfn, endfn) {
     //if element is a string instead of a html element, try a querySelector on it
-    if (typeof element === "string"){
-        let check = document.querySelector(element); 
-        if (check instanceof HTMLElement){
+    if (typeof element === "string") {
+        let check = document.querySelector(element);
+        if (check instanceof HTMLElement) {
             element = check;
         }
     }
     //now make sure it's audio or video
     if (element.nodeName.toLowerCase() !== "video" && element.nodeName.toLowerCase() !== "audio") {
         //fallback: try using query selector on elemnt
-        
+
     }
     //make sure numbers are in right order
     if (end < start) {
@@ -58,7 +78,7 @@ pericarp.cue = function (element, start, end, startfn, endfn) {
         end = this.toSec(end);
     }
 
-    
+
     let p = new Pericarp(element, start, end, startfn, endfn);
     this.cues.push(p);
     return p;
@@ -67,7 +87,7 @@ pericarp.cue = function (element, start, end, startfn, endfn) {
 
 let Pericarp = function (element, start, end, startfn, endfn) {
     let cue = this;
-    
+
     if (!start && end && startfn) {
         throw ("missing some stuff here")
     }
