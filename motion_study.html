@@ -83,15 +83,24 @@
             </ul>
         </details>
     </section>
+    <p>Loops</p>
+    <ul>
+        <li>Fast: <span id="fastloops">0</span></li>
+        <li>Slow: <span id="slowloops">0</span></li>
+        <li>Audio: <span id="audioloops">0</span></li>
+    </ul>
 </body>
 
 <script>
     let audio = document.querySelector("audio");
     let fast = document.querySelector("#fast");
     let slow = document.querySelector("#slow");
+    let aloops = document.querySelector("#audioloops");
+    let floops = document.querySelector("#fastloops");
+    let sloops = document.querySelector("#slowloops");
+
     console.log(audio);
     pericarp.cue("audio", 8.3, "01:29.69", function () {
-        console.log("go!");
         fast.play();
     }, function () {
         fast.pause();
@@ -99,15 +108,21 @@
     });
 
     fast.addEventListener("seeked", function () {
-        console.log("yes")
         let target = slow.currentTime + .066;
         if (target > slow.duration) {
+            sloops.textContent++;
             target = 0;
         }
         fast.playbackRate += 0.06;
         slow.currentTime = target;
+        //mark loop
+        floops.textContent++;
     })
 
+    //mark loop
+    audio.addEventListener("seeked", function () {
+        aloops.textContent++;
+    });
 
 </script>
 
