@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>difference</title>
+    <style>
+        button {
+            background-color: pink;
+            color: darkslategray;
+            font-size: 15em;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        article {
+            display: inline-block;
+            max-width: 25vw;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="but">press me</button>
+    <canvas id="canvas" class="visualizer" height="60px"></canvas>
+    <audio muted id="aud"></audio>
+
+    <section id="soundClips">
+
+
+    </section>
+
+    <script>
+        //some of this lovingly copied, pasted, and changed from Chris Mills's "Web Dictaphone" @ https://mdn.github.io/dom-examples/media/web-dictaphone/
+
+
+        /* a buffer looks like this 
+
+        AudioBuffer { sampleRate: 48000, length: 248576, duration: 5.1786666666666665, numberOfChannels: 2 }
+        [and then function prototypes]
+
+        */
+
+        //if difference image filter works by subtracting darker color from lighter color; we will subtract the quieter sound from the louder sound at each address.
+        let audioCtx;
+        let source;
+        let chunks = [];
+        let blobs = [];
+        let canvasCtx = canvas.getContext("2d");
+        let mime;
+
+        async function getMedia(constraints) {
+            console.log("getting media");
+            let stream = null;
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                aud.srcObject = stream;
+                let mediaRecorder = new MediaRecorder(stream);
+                audioCtx = new AudioContext();
+                aud.play();
+                aud.addEventListener("play", function () {
+                    source = audioCtx.createMediaStreamSource(stream);
+                    recordLoop(mediaRecorder);
+                });
+            } catch (err) {
+                /* handle the error */
+            }
+        }
+
+        but.addEventListener("click", function () {
+            getMedia({ video: false, audio: true });
+            but.style.display = "none";
+        });
+
+        async function recordLoop(mediaRecorder) {
+            return new Promise(async function (resolve) {
+                let stream = mediaRecorder.stream;
+                console.log(stream);
+                mediaRecorder.addEventListener("stop", recordStop);
+                mediaRecorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                };
+                visualize(stream);
+                mediaRecorder.start();
+                await sleep(5000);
+                mediaRecorder.stop();
+                return await recordLoop(mediaRecorder);
+
+
+            });
+
+        }
+        let recordings = 0;
+
+        function pickParent() {
+            let ds = document.querySelector(".holder:last-of-type");
+            if (ds && ds.querySelectorAll("article").length < 2) {
+                return ds;
+            }
+            let div = document.createElement("div");
+            div.classList.add("holder");
+            soundClips.appendChild(div);
+            return div;
+        }
+
+        function recordStop(mediaRecorder) {
+            let parent = pickParent();
+            console.log("record stop");
+            //add recorded video to page
+            let clipContainer = document.createElement("article");
+            let audio = document.createElement("audio");
+            audio.id = "aud" + recordings;
+            audio.dataset.id = recordings;
+            clipContainer.classList.add("clip");
+            clipContainer.appendChild(audio);
+            parent.appendChild(clipContainer);
+            audio.controls = true;
+            console.log(mediaRecorder);
+            mime = mediaRecorder.mimeType;
+            const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+            console.log(mediaRecorder.mimeType);
+            blobs.push(blob);
+            chunks = [];
+            const audioURL = window.URL.createObjectURL(blob);
+            audio.src = audioURL;
+            console.log("recorder stopped");
+            recordings++;
+            if (recordings > 0 && recordings % 2 === 0) {
+                makeDifference();
+            }
+        }
+
+        async function makeDifference() {
+            let lastDiv = document.querySelector(".holder:last-of-type");
+            let children = lastDiv.querySelectorAll("article");
+            if (!children.length == 2) {
+                return;
+            }
+            let a = children[0].dataset.id;
+            let b = children[1].dataset.id;
+            let ctxA = new AudioContext;
+            let ctxB = new AudioContext;
+
+            let buffers = [];
+            buffers.push(await ctxA.decodeAudioData(await blob2arrayBuffer(blobs[0])));
+            buffers.push(await audioCtx.decodeAudioData(await blob2arrayBuffer(blobs[1])));
+
+            buffers.sort((a, b) => a.length - b.length);
+            console.log(buffers)
+
+            let subtracted = subtractAudio(buffers);
+        }
+        let lowest = 0;
+        let highest = 0;
+        function subtractAudio(buffers) {
+            if (buffers.length !== 2) {
+                throw ("buffer count is wrong");
+            }
+            /*steps: 
+            
+            1. create new audiobuffer, making sure the new buffer is the size of the smaller buffer (they won't be the same size because... setTimeout isn't surgical. also these buffers are like duration * samplingrate as 32bit floats. Not normal arrays. This is ... kinda not fun!
+
+            2. for each index in the new bufferarray, fill with subtraction of smaller number from larger number. (that should be same as Math.abs() of either subtracting either?) .. no because they can be negative values.
+
+            3. make new audio element from this buffer.
+
+            4. ????? */
+
+
+            let copiedAudioBuffer = new AudioBuffer({
+                length: buffers[0].length,
+                numberOfChannels: buffers[0].numberOfChannels,
+                sampleRate: buffers[0].sampleRate
+            });
+
+            for (let channel = 0; channel < buffers[0].numberOfChannels; channel += 1) {
+                const oneData = buffers[0].getChannelData(channel);
+                const twoData = buffers[1].getChannelData(channel);
+                const newChannelData = copiedAudioBuffer.getChannelData(channel);
+                //console.log(oneData);
+                for (let sample = 0; sample < oneData.length; sample += 1) {
+                    let a = oneData[sample];
+                    let b = twoData[sample];
+                    let c = ((a + 1) - (b + 1)) - 1;
+                    if (c > highest) {
+                        highest = c;
+                    }
+                    if (c < lowest) {
+                        lowest = c;
+                    }
+                    if (c >= 1) {
+                        c = 0.99;
+                    }
+                    if (c <= -1) {
+                        c = -0.99;
+                    }
+                    console.log(c);
+                    newChannelData[sample] = c;
+                }
+            }
+            console.log(copiedAudioBuffer);
+            makeAudio(copiedAudioBuffer);
+
+
+        }
+
+
+        function blob2arrayBuffer(blob) {
+            return new Promise(function (resolve) {
+                let fileReader = new FileReader();
+                fileReader.onloadend = () => {
+                    resolve(fileReader.result);
+                }
+                fileReader.readAsArrayBuffer(blob);
+            });
+        }
+
+        function makeAudio(buffer) {
+            // Float32Array samples
+            const [left, right] = [buffer.getChannelData(0), buffer.getChannelData(1)]
+
+            // interleaved
+            const interleaved = new Float32Array(left.length + right.length)
+            for (let src = 0, dst = 0; src < left.length; src++, dst += 2) {
+                interleaved[dst] = left[src]
+                interleaved[dst + 1] = right[src]
+            }
+
+            // get WAV file bytes and audio params of your audio source
+            const wavBytes = getWavBytes(interleaved.buffer, {
+                isFloat: true,       // floating point or 16-bit integer
+                numChannels: 2,
+                sampleRate: 48000,
+            })
+            const wav = new Blob([wavBytes], { type: 'audio/wav' })
+            let audio = document.createElement("audio");
+            audio.src = window.URL.createObjectURL(wav);
+            audio.controls = true;
+            let ds = document.querySelector(".holder:last-of-type");
+            ds.appendChild(audio);
+        }
+
+        function visualize(stream) {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+
+            const source = audioCtx.createMediaStreamSource(stream);
+
+            const bufferLength = 2048;
+            const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = bufferLength;
+            const dataArray = new Uint8Array(bufferLength);
+
+            source.connect(analyser);
+
+            draw();
+
+            function draw() {
+                const WIDTH = canvas.width;
+                const HEIGHT = canvas.height;
+
+                requestAnimationFrame(draw);
+
+                analyser.getByteTimeDomainData(dataArray);
+
+                canvasCtx.fillStyle = "rgb(200, 200, 200)";
+                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+                canvasCtx.beginPath();
+
+                let sliceWidth = (WIDTH * 1.0) / bufferLength;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    let v = dataArray[i] / 128.0;
+                    let y = (v * HEIGHT) / 2;
+
+                    if (i === 0) {
+                        canvasCtx.moveTo(x, y);
+                    } else {
+                        canvasCtx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                canvasCtx.stroke();
+            }
+        }
+
+
+        window.onresize = function () {
+            canvas.width = document.body.offsetWidth;
+        };
+
+        window.onresize();
+
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+        // Returns Uint8Array of WAV bytes
+        function getWavBytes(buffer, options) {
+            const type = options.isFloat ? Float32Array : Uint16Array
+            const numFrames = buffer.byteLength / type.BYTES_PER_ELEMENT
+
+            const headerBytes = getWavHeader(Object.assign({}, options, { numFrames }))
+            const wavBytes = new Uint8Array(headerBytes.length + buffer.byteLength);
+
+            // prepend header, then add pcmBytes
+            wavBytes.set(headerBytes, 0)
+            wavBytes.set(new Uint8Array(buffer), headerBytes.length)
+
+            return wavBytes
+        }
+
+        // adapted from https://gist.github.com/also/900023
+        // returns Uint8Array of WAV header bytes
+        function getWavHeader(options) {
+            const numFrames = options.numFrames
+            const numChannels = options.numChannels || 2
+            const sampleRate = options.sampleRate || 44100
+            const bytesPerSample = options.isFloat ? 4 : 2
+            const format = options.isFloat ? 3 : 1
+
+            const blockAlign = numChannels * bytesPerSample
+            const byteRate = sampleRate * blockAlign
+            const dataSize = numFrames * blockAlign
+
+            const buffer = new ArrayBuffer(44)
+            const dv = new DataView(buffer)
+
+            let p = 0
+
+            function writeString(s) {
+                for (let i = 0; i < s.length; i++) {
+                    dv.setUint8(p + i, s.charCodeAt(i))
+                }
+                p += s.length
+            }
+
+            function writeUint32(d) {
+                dv.setUint32(p, d, true)
+                p += 4
+            }
+
+            function writeUint16(d) {
+                dv.setUint16(p, d, true)
+                p += 2
+            }
+
+            writeString('RIFF')              // ChunkID
+            writeUint32(dataSize + 36)       // ChunkSize
+            writeString('WAVE')              // Format
+            writeString('fmt ')              // Subchunk1ID
+            writeUint32(16)                  // Subchunk1Size
+            writeUint16(format)              // AudioFormat https://i.sstatic.net/BuSmb.png
+            writeUint16(numChannels)         // NumChannels
+            writeUint32(sampleRate)          // SampleRate
+            writeUint32(byteRate)            // ByteRate
+            writeUint16(blockAlign)          // BlockAlign
+            writeUint16(bytesPerSample * 8)  // BitsPerSample
+            writeString('data')              // Subchunk2ID
+            writeUint32(dataSize)            // Subchunk2Size
+
+            return new Uint8Array(buffer)
+        }
+    </script>
+</body>
+
+</html>

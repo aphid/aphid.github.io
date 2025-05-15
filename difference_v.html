@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>difference</title>
+    <style>
+        canvas {
+            border: 1px dotted pink;
+        }
+
+        video {
+            transition: all 220ms ease-in-out
+        }
+        
+        #row0, #row1 {
+            display: none;
+        } 
+    </style></head>
+
+
+<body>
+    <video id="vid"></video>
+    <canvas id="canv" width="640" height="480">
+        your browser does not support canvas
+    </canvas>
+
+    <section id="snapshots">
+
+    </section>
+
+    <script>
+
+        let ctx = canv.getContext('2d');
+
+        async function getMedia(constraints) {
+            let stream = null;
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                vid.srcObject = stream;
+                vid.play();
+                startRotation()
+            } catch (err) {
+                /* handle the error */
+            }
+        }
+        getMedia({ video: true, audio: false });
+
+        window.setInterval(function () {
+            ctx.drawImage(vid, 0, 0);
+
+        });
+
+        let deg = 0;
+        function startRotation() {
+            window.setInterval(function () {
+                deg = deg + 10;
+                ctx.drawImage(vid, 0, 0);
+                vid.style.filter = `saturate(900%) hue-rotate(${deg}deg)`;
+            }, 220);
+        }
+        
+
+        window.setInterval(function () {
+            snapshot();
+
+        },1000);
+
+
+        let shotcount = 0;
+
+        function snapshot(canvas) {
+            let div = document.createElement("div"); //parent div for canvases, goes in snapshot section
+            div.id = "row" + shotcount;
+
+            let c = document.createElement("canvas"); //canvas 1 - just a screenshot;
+            c.width = 640;
+            c.height = 480;
+            c.id = "initial" + shotcount;
+            let ctx = c.getContext('2d');
+            ctx.drawImage(canv, 0, 0);
+            div.appendChild(c);
+            if (shotcount) {
+                let d = document.createElement("canvas"); //canvas 1 - just a screenshot;
+                d.width = 640;
+                d.height = 480;
+                d.id = "diff" + shotcount;
+                let dtx = d.getContext('2d');
+                dtx.drawImage(c, 0, 0);
+                //Subtracts the darker of the two constituent colors from the lighter color.
+                //see: https://drafts.fxtf.org/compositing/#valdef-blend-mode-difference
+                dtx.globalCompositeOperation = "difference";
+                let prev = document.querySelector("#initial" + (shotcount - 1));
+                dtx.drawImage(prev,0,0);
+                div.appendChild(d);
+            }
+            snapshots.appendChild(div);
+
+            shotcount++;
+        } 
+
+
+    </script>
+</body>
+
+</html>
