@@ -77,6 +77,9 @@
         });
 
         async function recordLoop(mediaRecorder) {
+            if (recordings > 10){
+                return false;
+            }
             return new Promise(async function (resolve) {
                 let stream = mediaRecorder.stream;
                 console.log(stream);
@@ -96,13 +99,21 @@
         }
         let recordings = 0;
 
-        function pickParent() {
-            let ds = document.querySelector(".holder:last-of-type");
-            if (ds && ds.querySelectorAll("article").length < 2) {
-                return ds;
+        function pickParent(full) {
+            let ds = document.querySelectorAll(".holder");
+            ds = [...ds].reverse();
+            for (let d of ds){
+                let count = d.childElementCount;
+                if (!full && d.childElementCount < 2){
+                    return d;
+                }
+                if (full && d.childElementCount === 2) {
+                    return d;
+                }
             }
             let div = document.createElement("div");
             div.classList.add("holder");
+            div.id = "holder" + recordings;
             soundClips.appendChild(div);
             return div;
         }
@@ -122,7 +133,6 @@
             console.log(mediaRecorder);
             mime = mediaRecorder.mimeType;
             const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
-            console.log(mediaRecorder.mimeType);
             blobs.push(blob);
             chunks = [];
             const audioURL = window.URL.createObjectURL(blob);
@@ -137,25 +147,30 @@
         async function makeDifference() {
             let lastDiv = document.querySelector(".holder:last-of-type");
             let children = lastDiv.querySelectorAll("article");
-            if (!children.length == 2) {
+            if (children.length < 2) {
+                console.log("only one element");
                 return;
             }
-            let a = children[0].dataset.id;
-            let b = children[1].dataset.id;
-            let ctxA = new AudioContext;
-            let ctxB = new AudioContext;
+            console.log(children);
+            let a = children[0].querySelector("audio").dataset.id;
+            let b = children[1].querySelector("audio").dataset.id;
+            let ctxA = new AudioContext();
+            let ctxB = new AudioContext();
 
             let buffers = [];
-            buffers.push(await ctxA.decodeAudioData(await blob2arrayBuffer(blobs[0])));
-            buffers.push(await audioCtx.decodeAudioData(await blob2arrayBuffer(blobs[1])));
+            buffers.push(await ctxA.decodeAudioData(await blob2arrayBuffer(blobs[a])));
+            buffers.push(await audioCtx.decodeAudioData(await blob2arrayBuffer(blobs[b])));
 
             buffers.sort((a, b) => a.length - b.length);
             console.log(buffers)
 
             let subtracted = subtractAudio(buffers);
         }
+
+
         let lowest = 0;
         let highest = 0;
+
         function subtractAudio(buffers) {
             if (buffers.length !== 2) {
                 throw ("buffer count is wrong");
@@ -198,7 +213,7 @@
                     if (c <= -1) {
                         c = -0.99;
                     }
-                    console.log(c);
+                    //console.log(c);
                     newChannelData[sample] = c;
                 }
             }
@@ -237,11 +252,22 @@
                 sampleRate: 48000,
             })
             const wav = new Blob([wavBytes], { type: 'audio/wav' })
+
+            let parent = pickParent(true);
+            console.log(parent);
+            let clipContainer = document.createElement("article");
             let audio = document.createElement("audio");
+            audio.id = "aud" + recordings;
+            audio.dataset.id = recordings;
+            clipContainer.classList.add("clip");
+            clipContainer.classList.add("construct");
+        
+            clipContainer.appendChild(audio);
+            parent.appendChild(clipContainer);
             audio.src = window.URL.createObjectURL(wav);
             audio.controls = true;
-            let ds = document.querySelector(".holder:last-of-type");
-            ds.appendChild(audio);
+            console.log(clipContainer.outerHTML)
+            parent.appendChild(clipContainer);
         }
 
         function visualize(stream) {
