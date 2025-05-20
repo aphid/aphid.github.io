@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .drawing { margin: 15px; border: 1px dotted gray;}
+</style>
+
+<body>
+
+    <script>
+
+        let lewitt = [{
+            "number": 1005,
+            "mocaUrl": "https://massmoca.org/event/walldrawing1005/",
+            "instruction": "Isometric form."
+        }, {
+            "number": 11,
+            "mocaUrl": "https://massmoca.org/event/walldrawing11/",
+            "instruction": `A wall divided horizontally and vertically into four equal parts. Within each part, three of the four kinds of lines are superimposed.`
+        },{
+            "number": 16,
+            "mocaUrl": "https://massmoca.org/event/walldrawing16/",
+            "instruction": `Bands of lines 12 inches (30 cm) wide, in three directions (vertical, horizontal, diagonal right) intersecting.`
+        }, {
+            "number": 17,
+            "mocaUrl": "https://massmoca.org/event/walldrawing17/",
+            "instruction": "Four-part drawing with a different line direction in each part."
+        }, {
+            "number": 19,
+            "mocaUrl": "https://massmoca.org/event/walldrawing19/",
+            "instruction": "A wall divided vertically into six equal parts, with two of the four kinds of line directions superimposed in each part."
+        }, {
+            "number": 38,
+            "mocaUrl": "https://massmoca.org/event/walldrawing38/",
+            "instruction": "Tissue paper cut into 1½-inch (4 cm) squares and inserted into holes in the gray pegboard walls. All holes in the walls are filled randomly."
+        },{
+            "number": 46,
+            "mocaUrl": "https://massmoca.org/event/walldrawing46/",
+            "instruction": "Vertical lines, not straight, not touching, covering the wall evenly."
+        },{
+            "number": 47,
+            "mocaUrl": "https://massmoca.org/event/walldrawing47/",
+            "instruction": `A wall divided into fifteen equal parts, each with a different line direction, and all combinations. of lines 12 inches (30 cm) wide, in three directions (vertical, horizontal, diagonal right) intersecting.`
+        },{
+            "number": 51,
+            "mocaUrl": "https://massmoca.org/event/walldrawing51/",
+            "instruction": `All architectural points connected by straight lines.`
+        },{
+            "number": 56,
+            "mocaUrl": "https://massmoca.org/event/walldrawing56/",
+            "instruction": `A square is divided horizontally and vertically into four equal parts, each with lines in four directions superimposed progressively.`
+        },{
+            "number": 85,
+            "mocaUrl": "https://massmoca.org/event/walldrawing85/",
+            "instruction": `A wall is divided into four horizontal parts. In the top row are four equal divisions, each with lines in a different direction. In the second row, six double combinations; in the third row, four triple combinations; in the bottom row, all four combinations superimposed.`
+        },{
+            "number": 16,
+            "mocaUrl": "https://massmoca.org/event/walldrawing16/",
+            "instruction": `Bands of lines 12 inches (30 cm) wide, in three directions (vertical, horizontal, diagonal right) intersecting.`
+        },{
+            "number": 86,
+            "mocaUrl": "https://massmoca.org/event/walldrawing86/",
+            "instruction": `Ten thousand lines about 10 inches (25 cm) long, covering the wall evenly.`
+        },{
+            "number": 87,
+            "mocaUrl": "https://massmoca.org/event/walldrawing87/",
+            "instruction": `A square divided horizontally and vertically into four equal parts, each with lines and colors in four directions superimposed progressively.`
+        },{
+            "number": 88,
+            "mocaUrl": "https://massmoca.org/event/walldrawing88/",
+            "instruction": `A wall is divided into four horizontal parts. In the top row are four equal divisions, each with lines in a different direction. In the second row, six double combinations; in the third row, four triple combinations; in the bottom row, all four combinations superimposed.`
+        },{
+            "number": 95,
+            "mocaUrl": "https://massmoca.org/event/walldrawing95/",
+            "instruction": `On a wall divided vertically into fifteen equal parts, vertical lines, not straight, using four colors in all one-, two-, three-, and four-part combinations.`
+        },{
+            "number": 130,
+            "mocaUrl": "https://massmoca.org/event/walldrawing130/",
+            "instruction": `Grid and arcs from four corners.`
+        },{
+            "number": 138,
+            "mocaUrl": "https://massmoca.org/event/walldrawing138/",
+            "instruction": `Circles and arcs from the midpoints of four sides.`
+        },{
+            "number": 154,
+            "mocaUrl": "https://massmoca.org/event/walldrawing154/",
+            "instruction": `A black outlined square with a red horizontal line from the midpoint of the left side toward the middle of the right side.`
+        },{
+            "number": 159,
+            "mocaUrl": "https://massmoca.org/event/walldrawing159/",
+            "instruction": `A black outlined square with a red diagonal line from the lower left corner toward the upper right corner; and another red line from the lower right corner to the upper left.`
+        },{
+            "number": 289,
+            "mocaUrl": "https://massmoca.org/event/walldrawing289/",
+            "instruction": `A 6-inch (15 cm) grid covering each of the four black walls. White lines to points on the grids. Fourth wall: twenty-four lines from the center, twelve lines from the midpoint of each of the sides, twelve lines from each corner. (The length of the lines and their placement are determined by the drafter.)`
+        },{
+            "number": 797,
+            "mocaUrl": "https://massmoca.org/event/walldrawing797/",
+            "instruction": `The first drafter has a black marker and makes an irregular horizontal line near the top of the wall. Then the second drafter tries to copy it (without touching it) using a red marker. The third drafter does the same, using a yellow marker. The fourth drafter does the same using a blue marker. Then the second drafter followed by the third and fourth copies the last line drawn until the bottom of the wall is reached.`
+        }]
+
+        for (let l of lewitt){
+            let div = document.createElement("div");
+            div.classList.add("drawing");
+            div.innerHTML = `<h3 class="num"><a href="${l.mocaUrl}">${l.number}</a></h3>
+            <p>${l.instruction}</p>`;
+            document.body.appendChild(div); 
+        };
+
+    </script>
+</body>
+
+</html>
