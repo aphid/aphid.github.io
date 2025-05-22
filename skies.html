@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>time.code</title>
+    <style>
+        /* a container that goes around the video */
+
+        body {
+            margin: 0;
+        }
+
+        #videoContainer {
+            box-sizing: border-box;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid greenyellow;
+            overflow: hidden;
+            transition: all 3s ease-in-out;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        canvas {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            border: 1px solid black;
+            transition: all 3s ease-in-out;
+        }
+
+        .colorShift {
+            filter: hue-rotate(90deg);
+        }
+
+        .flip {
+            transform: scale(-1, 1);
+            backdrop-filter: saturate(900%) hue-rotate(90deg);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+    Drill two holes in a canvas.
+    Hang it where you can see the sky.
+
+    (Change the place of hanging.
+    Try both the front and 
+    -->
+    <section id="videoContainer">
+        <video autoplay muted loop
+            src="https://archive.org/download/C.E.PriceCloudySkyWithSun/Cloudy_Sky_With_Sun_512kb.mp4"></video>
+        </video>
+        <canvas id="canv" width="400" height="300"></canvas>
+        <div id="text"></div>
+    </section>
+</body>
+
+<script>
+
+    let video = document.querySelector("video");
+    let text = document.querySelector("#text");
+
+    let ctx = canv.getContext("2d");
+    ctx.fillStyle = "tan";
+    ctx.rect(0, 0, canv.width, canv.height);
+    ctx.fill();
+
+
+    let clicks = 0;
+    canv.addEventListener("click", function (e) {
+        clicks++;
+        console.log(clicks);
+        if (clicks <= 2) {
+            var rect = e.target.getBoundingClientRect();
+            var x = e.clientX - rect.left; //x position within the element.
+            var y = e.clientY - rect.top;  //y position within the element.
+            console.log(x, y);
+            ctx.beginPath();
+            ctx.fillStyle = "black;"
+            ctx.save();
+            let circle = new Path2D();
+            circle.arc(x - 20, y - 20, 40, 0, 2 * Math.PI);
+            ctx.clip(circle);
+            ctx.clearRect(0, 0, canv.width, canv.height);
+            ctx.restore();
+        } else if (clicks === 3){
+            video.style.opacity = 1;
+            //canv.style.backdropFilter = "saturate(900%)"
+        } else {
+            canv.classList.add("flip");
+
+        }
+
+    });
+
+</script>
+
+
+</html>

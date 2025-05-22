@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        button {
+            font-size: 3em;
+        }
+    </style>
+</head>
+
+<body>
+    <audio controls src="wilhelm.mp3"></audio>
+    <h1>Scream.</h1>
+    <button onclick="scream('wind')">against the wind</button>
+    <button onclick="scream('wall')">against the wall</button>
+    <button onclick="scream('sky')">against the sky</button>
+</body>
+<script>
+    let audioCtx;
+    async function scream(location) {
+        console.log(typeof audioCtx)
+        if (typeof audioCtx === "object") {
+            console.log("maybe resetting");
+            audioCtx.close();
+        }
+        audioCtx = new AudioContext();
+        let audio = document.querySelector("audio")
+        let source = audioCtx.createMediaElementSource(audio);
+        let reverb = await createReverb(location);
+        source.connect(reverb);
+        reverb.connect(audioCtx.destination);
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+
+    // someOtherAudioNode -> reverb -> destination
+
+    async function createReverb(location) {
+        console.log(location);
+        let convolver = audioCtx.createConvolver();
+        let response;
+        // load impulse response from file
+        if (location === "wind") {
+            response = await fetch("184119__noisecollector__ir_moon2.wav");
+        } else if (location === "wall") {
+            response = await fetch("terrys_warehouse_omni.wav");
+        } else if (location === "sky") {
+            response = await fetch("koli_summer_site1_4way_mono.wav");
+        } else {
+            throw ("idk what to scream against");
+        }
+        let arraybuffer = await response.arrayBuffer();
+        convolver.buffer = await audioCtx.decodeAudioData(arraybuffer);
+
+        return convolver;
+    }
+
+    /* sky https://www.openair.hosted.york.ac.uk/?page_id=577
+    
+    wall  https://www.openair.hosted.york.ac.uk/?page_id=735 */
+</script>
+
+</html>
