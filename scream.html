@@ -29,7 +29,7 @@
             audioCtx.close();
         }
         audioCtx = new AudioContext();
-        let audio = document.querySelector("audio")
+        let audio = document.querySelector("audio");
         let source = audioCtx.createMediaElementSource(audio);
         let reverb = await createReverb(location);
         source.connect(reverb);
