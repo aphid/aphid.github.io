@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>finding</title>
+    <style>
+        body {
+            background-color: peachpuff;
+        }
+
+        .yeah {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(0, 0, 15, 0.2);
+            transition: all 0.5s linear;
+        }
+
+        .yeah:hover {
+            left: 11%;
+            top: 12%;
+            background-color: rgba(15, 0, 0, 0.2);
+            backdrop-filter: blur(3px);
+            transform: rotate(4deg);
+        }
+
+
+        .yeah {
+            color: whitesmoke;
+        }
+
+
+        div div div div div div div div div div div div div div div div:hover {
+            background-color: rgba(255, 192, 203, 0.1) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yeah">
+        <div class="yeah">
+            <div class="yeah">
+                <div class="yeah">
+                    <div class="yeah">
+                        <div class="yeah">
+                            <div class="yeah">
+                                <div class="yeah">
+                                    <div class="yeah">
+                                        <div class="yeah">
+                                            <div class="yeah"><span>hi!</span>
+                                                <div class="yeah">
+                                                    <div class="yeah">
+                                                        <div class="yeah">
+                                                            <div class="yeah">
+                                                                <div class="yeah">
+                                                                    <div class="yeah">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="findit">find it!</button>
+</body>
+
+<script>
+    let haystack = document.querySelectorAll("div"); //".yeah" would return the same thing
+    let needle = "hi!";
+
+    function findNeedle(haystack) {
+        for (let div of haystack) {
+            if (div.textContent.includes(needle)) {
+                return div;
+            }
+        }
+    }
+
+
+    findit.addEventListener("click", function () {
+        let target = findNeedle(haystack);
+        if (target) {
+            target.innerHTML = target.innerHTML.replace(needle, "found it!");
+        }
+    })
+
+</script>
+
+</html>
